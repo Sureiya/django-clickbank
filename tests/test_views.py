@@ -5,7 +5,10 @@ from django_clickbank.models import Post, Notification
 from django_clickbank.tests.posts import TEST_POSTS, SECRET_KEY
 from django_clickbank.util.helpers import generate_post
 from django.conf import settings
-import simplejson as json
+try:
+	import simplejson as json
+except:
+	import json
 
 @override_settings(CLICKBANK_SECRET_KEY=SECRET_KEY)
 class ViewTest(TestCase):
