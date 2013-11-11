@@ -148,7 +148,7 @@ class Notification(models.Model):
 
 	def initialize(self, request):
 		""" If notification is being added from an actual Post this will set sender IP and store query if neccesary """
-		if CLICKBANK_DEBUG or CLICKBANK_STORE_POSTS:
+		if settings.CLICKBANK_DEBUG or settings.CLICKBANK_STORE_POSTS:
 			post = Post(post_data=request.POST, get_data=request.GET)
 			post.save()
 			self.post_data = post
