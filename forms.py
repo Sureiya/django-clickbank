@@ -1,5 +1,5 @@
 from django import forms
-from .models import Notification, Post
+from django_clickbank.models import Notification, Post
 
 class NotificationForm(forms.ModelForm):
 	""" Form used to recieve and validate ClickBank IPN Data """

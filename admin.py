@@ -1,11 +1,15 @@
 from django.contrib import admin
-from .models import Notification, Post
-from .forms import PostAdminForm
+from django.utils.safestring import mark_safe
+from django.core.urlresolvers import reverse
+from django_clickbank.models import Notification, Post
+from django_clickbank.forms import PostAdminForm
 
 class NotificationAdmin(admin.ModelAdmin):
 	model = Notification
 
 	list_display = ['receipt', 'parent_receipt', 'transaction_type', 'email', 'product_title',  'product_type', 'order_amount', 'recieved_amount', 'transaction_affiliate', 'transaction_date']
+
+	readonly_fields = ['post_data']
 
 class TestNotification(Notification):
 	class Meta:

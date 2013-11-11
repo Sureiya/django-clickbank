@@ -1,17 +1,27 @@
-from .settings import CLICKBANK_SECRET_KEY, CLICKBANK_DEBUG
 import hashlib
-from .exceptions import NotificationFailedValidation
 import datetime
+import time
 import logging
+import random
+import string
+
+from django.conf import settings
+from django_clickbank.util.exceptions import NotificationFailedValidation
+from django_clickbank.models import Notification
+
+from django.conf import settings
+
 logger = logging.getLogger('django_clickbank.notifications')
 
 def verify_secret(post, secret_key = None):
 	""" Checks the secret key and makes sure the post hash matches """
 	if secret_key is None:
-		secret_key = CLICKBANK_SECRET_KEY
+		secret_key = settings.CLICKBANK_SECRET_KEY
 	post = post.copy()
 	try:
 		post_hash = post.pop('cverify')
+		if isinstance(post_hash, list):
+			post_hash = post_hash[0]
 		ipn_fields = []
 		for key in post.keys():
 			ipn_fields.append(key)
@@ -22,8 +32,18 @@ def verify_secret(post, secret_key = None):
 			data.append(post[field])
 		data.append(secret_key)
 		hash_string = '|'.join(data)
-		return post_hash == hashlib.sha1(hash_string).hexdigest()[:8].upper()
+		hex_digest = unicode(hashlib.sha1(hash_string).hexdigest()[:8].upper(), encoding='ascii')
+		verification = post_hash == hex_digest
+		#zimport ipdb; ipdb.set_trace()
+		logger.debug('Verification: cverify = {0}'.format(repr(post_hash)))
+		logger.debug('Verification: computed digest = {0}'.format(repr(hex_digest)))
+		logger.debug('Verification: SECRET_KEY = {0}'.format(secret_key))
+		logger.debug('Verification: Hashed String = {0}'.format(hash_string))
+		logger.debug('Verification: {0}'.format(verification))
+		
+		return verification
 	except Exception, e:
+		raise
 		logger.debug('Notification Verification Failed {0}'.format(e))
 		return False
 
@@ -31,7 +51,7 @@ def make_secret(post, secret_key = None):
 	""" Makes a new cverify from post parameters. Only usefull for creating test POSTs """
 
 	if secret_key is None:
-		secret_key = CLICKBANK_SECRET_KEY
+		secret_key = settings.CLICKBANK_SECRET_KEY
 	post = post.copy()
 	if 'cverify' in post:
 		post_hash = post.pop('cverify')
@@ -42,7 +62,10 @@ def make_secret(post, secret_key = None):
 	
 	data = []
 	for field in ipn_fields:
-		data.append(post[field])
+		if isinstance(post[field], list):
+			data.append(post[field][0])
+		else:
+			data.append(post[field])
 	data.append(secret_key)
 	hash_string = '|'.join(data)
 	return hashlib.sha1(hash_string).hexdigest()[:8].upper()
@@ -126,9 +149,89 @@ def remap_post(data):
 
 def epoch_to_datetime(epochtime):
 	""" Converts a unix epoch time to python datetime """
-	return datetime.datetime.utcfromtimestamp(int(epochtime))
+	if epochtime:
+		return datetime.datetime.utcfromtimestamp(int(epochtime))
 
+def cents_to_decimal(cents):
+	""" Used to turns clickbank amounts (in cents) to decimal number """
+	if cents:
+		return float(cents) / 100
 
-def generate_post(secret_key=CLICKBANK_SECRET_KEY, data=None):
+def amount_generator(min=200, max=999999):
+	""" Used to generate a random amount in cents """
+	return str(random.randrange(min, max))
+
+def receipt_generator():
+	""" Used to generate a random receipt for testing """
+	return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(13))
+
+def zip_generator():
+	return str(random.randrange(00000, 99999))
+
+def string_generator(length=5, chars=string.ascii_uppercase + string.digits):
+	return ''.join(random.choice(chars) for x in range(length))
+
+def language_generator():
+	from django.conf.global_settings import LANGUAGES
+	return random.choice(LANGUAGES)[0].upper()
+
+def future_date_generator(min_days=2, max_days=30):
+	now = datetime.datetime.now()
+	timedelta = datetime.timedelta(days=random.randrange(min_days, max_days))
+	return str(int(time.mktime((now + timedelta).timetuple())))
+
+def generate_post(secret_key=settings.CLICKBANK_SECRET_KEY, data=None):
 	""" Generate a post with a given secret key for use with testing """
-	pass
+	import names
+	first_name = names.get_first_name()
+	last_name = names.get_last_name()
+
+	post_data = {
+		u'caccountamount': amount_generator(),
+		u'cnoticeversion': u'4.0',
+		u'cbf': u'',
+		u'ctranspaymentmethod': random.choice(Notification.PAYMENT_METHOD_CHOICES)[0],
+		u'corderamount': amount_generator(),
+		u'ctaxamount': amount_generator(),
+		u'ccustzip': zip_generator(),
+		u'ctransreceipt': receipt_generator(),
+		u'ccustfullname': ' '.join([first_name, last_name]),
+		u'ctid': string_generator(),
+		u'corderlanguage': language_generator(),
+		u'ccustcounty': string_generator(),
+		u'ccustcc': string_generator(2),
+		u'ccuststate': string_generator(2),
+		u'cbfpath': u'',
+		u'cfuturepayments': string_generator(length=1, chars=string.digits),
+		u'crebillamnt': amount_generator(),
+		u'ccustaddr2': string_generator(20),
+		u'cshippingamount': amount_generator(),
+		u'ctransaction': random.choice(Notification.TRANSACTION_TYPE_CHOICES)[0],
+		u'ctransvendor': string_generator(),
+		u'ccustshippingzip': zip_generator(),
+		u'ctransaffiliate': string_generator(),
+		u'ccustemail': string_generator(),
+		u'cupsellreceipt': receipt_generator(),
+		u'cprodtitle': string_generator(),
+		u'ctransrole': random.choice(Notification.ROLE_CHOICES)[0],
+		u'crebillstatus': random.choice(Notification.REBILL_STATUS_CHOICES)[0],
+		u'cbfid': u'',
+		u'cvendthru': u'',
+		u'cprodtype': random.choice(Notification.PRODUCT_TYPE_CHOICES)[0],
+		u'ccustfirstname': first_name,
+		u'ctranstime': u'1383333571',
+		u'ccurrency': string_generator(chars=string.ascii_uppercase, length=3)[0],
+		u'cprocessedpayments': str(random.randrange(1, 100)),
+		u'ccustshippingcountry': string_generator(),
+		u'ccustlastname': last_name,
+		u'cnextpaymentdate': future_date_generator(),
+		u'cproditem': string_generator(chars=string.digits),
+		u'ccustaddr1': string_generator(length=20),
+		u'ccustcity': string_generator(length=10),
+		u'crebillfrequency': u'',
+		u'ccustshippingstate': string_generator(length=2, chars=string.ascii_uppercase)
+	}
+	post_data[u'cverify'] = make_secret(post_data)
+	return post_data
+
+

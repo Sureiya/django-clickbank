@@ -1,6 +1,6 @@
 from django.db import models
-from .settings import *
-# Create your models here.
+from django.conf import settings
+from django_clickbank.signals import *
 
 class Post(models.Model):
 	""" 
@@ -9,14 +9,33 @@ class Post(models.Model):
 	"""
 	post_data = models.CharField(max_length=4096, blank=True, null=True)
 	get_data = models.CharField(max_length=4096, blank=True, null=True)
+	failed = models.BooleanField(default=False)
 	time = models.DateTimeField(auto_now_add=True)
 
 	class Meta:
 		verbose_name = u'post'
 		verbose_name_plural  = u'posts'
 
+	def __unicode__(self):
+		return u'{0}'.format(self.id)
+
 class Notification(models.Model):
 	""" Model to hold all of the information recieved in a ClickBank Notification """
+
+	# List of fields that need to be converted from unix epoch time to python DateTime instance.
+	DATE_FIELDS = (
+		'transaction_date',
+		'next_payment_date',
+	)
+
+	# List of fields that are processed by cents_to_decimal helper function
+	AMOUNT_FIELDS = (
+		'recieved_amount',
+		'order_amount',
+		'tax_amount',
+		'rebill_amount',
+		'shipping_amount',
+	)
 
 	TRANSACTION_TYPE_CHOICES = (
 		('SALE', 'Sale'),
@@ -26,7 +45,8 @@ class Notification(models.Model):
 		('INSF', 'Insufficient Funds (eCheck)'),
 		('CANCEL-REBILL', 'Cancel Rebill'),
 		('UNCANCEL-REBILL', 'Resume Rebill'),
-		('TEST', 'IPN Test')
+		('TEST', 'IPN Test'),
+		('TEST_SALE', 'Test Sale')
 	)
 
 	ROLE_CHOICES = (
@@ -41,11 +61,27 @@ class Notification(models.Model):
 	)
 
 	PRODUCT_TYPE_CHOICES = (
+		('STANDARD', 'Standard'),
+		('RECURRING', 'Recurring')
+	)
 
-		)
 	PAYMENT_METHOD_CHOICES = (
-
-		)
+		('PYPL', 'Paypal'),
+		('VISA', 'Visa'),
+		('MSTR', 'Mastercard'),
+		('DISC', 'Discover'),
+		('AMEX', 'American Express'),
+		('SWIT', 'Switch?'),
+		('SOLO', 'Solo'),
+		('JCBC', 'JCBC'),
+		('DNRS', 'Diners Club'),
+		('ENRT', 'ENRT'),
+		('AUST', 'AUST'),
+		('BLME', 'BLME'),
+		('STVA', 'STVA'),
+		('MAES', 'Maestro'),
+		('TEST', 'Test Credit Card')
+	)
 
 	# Notification Fields
 	receipt = models.CharField(max_length=13, unique=True)
@@ -68,6 +104,8 @@ class Notification(models.Model):
 	product_title = models.CharField(max_length=255, blank=True, null=True)
 	product_type = models.CharField(max_length=11, choices=PRODUCT_TYPE_CHOICES)
 	product_id = models.CharField(max_length=5)
+
+	verification_passed = models.BooleanField(default=True)
 
 	# Upsell
 	parent_receipt = models.CharField(max_length=13, blank=True, null=True)
@@ -118,7 +156,30 @@ class Notification(models.Model):
 
 	def send_signals(self):
 		""" Send out neccesary signals on post_save or update """
-		pass
+		
+		if self.transaction_type in ('SALE', 'TEST_SALE'):
+			sale.send(sender=self)
+
+		elif self.transaction_type == 'BILL':
+			rebill.send(sender=self)
+
+		elif self.transaction_type == 'RFND':
+			refund.send(sender=self)
+
+		elif self.transaction_type == 'CGBK':
+			chargeback.send(sender=self)
+
+		elif self.transaction_type == 'INSF':
+			insufficient_funds.send(sender=self)
+
+		elif self.transaction_type == 'CANCEL-REBILL':
+			cancel.send(sender=self)
+
+		elif self.transaction_type == 'UNCANCEL-REBILL':
+			uncancel.send(sender=self)
+
+		elif self.transaction_type == 'TEST':
+			test.send(sender=self)
 
 	def __unicode__(self):
 		return u'{0}'.format(self.receipt)
