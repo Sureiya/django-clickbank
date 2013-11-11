@@ -2,7 +2,12 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.conf import settings
-import simplejson as json
+
+try:
+	import simplejson as json
+except:
+	import json
+
 import logging
 
 from django_clickbank.models import Post, Notification
