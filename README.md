@@ -20,11 +20,11 @@ pip install django-clickbank
 ```
 ##### Installing with pip from github
 ```sh
-pip install -e git+[git-repo-url]
+pip install -e git+https://github.com/Sureiya/django-clickbank.git
 ```
 ##### Manual Installaion
 ```sh
-git clone [git-repo-url] django-clickbank
+git clone https://github.com/Sureiya/django-clickbank.git django-clickbank
 cd django-clickbank
 python setup.py
 ```
@@ -91,9 +91,9 @@ def sale_callback(sender, **kwargs):
 ```
 For more information on signals, see [Django Signals] [2]
 
-To view a full list of signals refer to django_clickbank/signals.py
+To view a full list of signals refer to [signals.py] [3]
 
-To view all notification fields, see django_clickbank/models.py
+To view all notification fields, see [models.py] [4]
 
 **Important Note**
 
@@ -130,3 +130,5 @@ MIT
   
 [1]: https://support.clickbank.com/entries/22803622-Instant-Notification-Service
 [2]: https://docs.djangoproject.com/en/dev/topics/signals/
+[3]: https://github.com/Sureiya/django-clickbank/blob/master/django_clickbank/signals.py
+[4]: https://github.com/Sureiya/django-clickbank/blob/master/django_clickbank/models.py
