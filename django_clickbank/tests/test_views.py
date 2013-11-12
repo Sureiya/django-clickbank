@@ -9,16 +9,6 @@ from django_clickbank.util.helpers import generate_post
 @override_settings(CLICKBANK_SECRET_KEY=SECRET_KEY)
 class ViewTest(TestCase):
 
-	def test_debug_ipn(self):
-		client = Client()
-		for post in TEST_POSTS:
-			response = client.post(reverse('clickbank.debug.ipn_data'), post)
-			self.assertEqual(response.status_code, 200)
-			post = Post.objects.get(pk=int(response.content))
-			self.assertIsInstance(post, Post)
-			self.assertNotEqual(post.post_data, '')
-			self.assertNotEqual(post.post_data, None)
-
 	def test_ipn(self):
 		client = Client()
 		import copy
