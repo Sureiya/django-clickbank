@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 import django_clickbank
 
 setup(
-	name = "django_clickbank",
+	name = "django-clickbank",
 	version = django_clickbank.__version__,
 	packages = find_packages(),
 
