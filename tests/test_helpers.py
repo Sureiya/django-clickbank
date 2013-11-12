@@ -4,6 +4,7 @@ from django_clickbank import settings
 from django_clickbank.util.helpers import remap_post
 from django_clickbank.util.helpers import generate_post
 
+
 class HelperTest(TestCase):
 	def setUp(self):
 		settings.CLICKBANK_SECRET_KEY = SECRET_KEY
@@ -15,7 +16,7 @@ class HelperTest(TestCase):
 			self.assertTrue(verify(post, SECRET_KEY))
 
 	def test_remap_post(self):
-		
+
 		import copy
 		test_posts = copy.deepcopy(TEST_POSTS)
 

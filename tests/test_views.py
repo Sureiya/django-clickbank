@@ -1,14 +1,10 @@
 from django.core.urlresolvers import reverse
 from django.test import TestCase, Client
-from django.test.utils import  override_settings
+from django.test.utils import override_settings
 from django_clickbank.models import Post, Notification
 from django_clickbank.tests.posts import TEST_POSTS, SECRET_KEY
 from django_clickbank.util.helpers import generate_post
-from django.conf import settings
-try:
-	import simplejson as json
-except:
-	import json
+
 
 @override_settings(CLICKBANK_SECRET_KEY=SECRET_KEY)
 class ViewTest(TestCase):
@@ -18,7 +14,7 @@ class ViewTest(TestCase):
 		for post in TEST_POSTS:
 			response = client.post(reverse('clickbank.debug.ipn_data'), post)
 			self.assertEqual(response.status_code, 200)
-			post= Post.objects.get(pk=int(response.content))
+			post = Post.objects.get(pk=int(response.content))
 			self.assertIsInstance(post, Post)
 			self.assertNotEqual(post.post_data, '')
 			self.assertNotEqual(post.post_data, None)

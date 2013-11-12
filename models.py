@@ -2,8 +2,9 @@ from django.db import models
 from django.conf import settings
 from django_clickbank.signals import *
 
+
 class Post(models.Model):
-	""" 
+	"""
 	Debug model used to log raw POST dictionaries of
 	clickbank data in order to create test posts
 	"""
@@ -14,18 +15,23 @@ class Post(models.Model):
 
 	class Meta:
 		verbose_name = u'post'
-		verbose_name_plural  = u'posts'
+		verbose_name_plural = u'posts'
 
 	def __unicode__(self):
 		return u'{0}'.format(self.id)
+
 
 class Notification(models.Model):
 	""" Model to hold all of the information recieved in a ClickBank Notification """
 
 	# List of fields that need to be converted from unix epoch time to python DateTime instance.
-	DATE_FIELDS = (
+	TIME_FIELDS = (
 		'transaction_date',
 		'next_payment_date',
+	)
+
+	DATE_FIELDS = (
+		'',
 	)
 
 	# List of fields that are processed by cents_to_decimal helper function
@@ -115,7 +121,7 @@ class Notification(models.Model):
 	rebill_amount = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
 	processed_payments = models.IntegerField(blank=True, null=True)
 	future_payments = models.IntegerField(blank=True, null=True)
-	next_payment_date = models.DateTimeField(blank=True, null=True)
+	next_payment_date = models.DateField(blank=True, null=True)
 	rebill_status = models.CharField(max_length=10, blank=True, null=True, choices=REBILL_STATUS_CHOICES)
 	rebill_frequency = models.CharField(max_length=20, blank=True, null=True)
 
@@ -144,7 +150,7 @@ class Notification(models.Model):
 
 	class Meta:
 		verbose_name = u'notification'
-		verbose_name_plural  = u'notifications'
+		verbose_name_plural = u'notifications'
 
 	def initialize(self, request):
 		""" If notification is being added from an actual Post this will set sender IP and store query if neccesary """
@@ -156,7 +162,7 @@ class Notification(models.Model):
 
 	def send_signals(self):
 		""" Send out neccesary signals on post_save or update """
-		
+
 		if self.transaction_type in ('SALE', 'TEST_SALE'):
 			sale.send(sender=self)
 

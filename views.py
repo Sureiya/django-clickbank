@@ -12,23 +12,22 @@ import logging
 
 from django_clickbank.models import Post, Notification
 from django_clickbank.forms import NotificationForm
-from django_clickbank.util.helpers import conditional_decorator, verify_secret, remap_post, epoch_to_datetime
+from django_clickbank.util.helpers import conditional_decorator, verify_secret, remap_post,\
+																		epoch_to_datetime, date_to_datetime
 from django_clickbank.util.helpers import cents_to_decimal
 from django_clickbank.util.exceptions import NotificationFailedValidation
 
 logger = logging.getLogger('django_clickbank.notifications')
 
-@csrf_exempt
-def record_ipn_data(request):
-	post = Post(post_data=json.dumps(request.POST), get_data=json.dumps(request.GET))
-	post.save()
-	return HttpResponse(post.id, status=200)
 
-
-@conditional_decorator(require_POST, settings.CLICKBANK_DEBUG == False)
+@conditional_decorator(require_POST, settings.CLICKBANK_DEBUG is False)
 @csrf_exempt
 def ipn(request, get=False):
-	## Copy data. Get copying is for debug mode.
+	"""
+	IPN View. If CLICKBANK_DEBUG == True then you can use the url /ipn/get/ to post
+	to it using get requests. This is usefull for testing without using a REST Client or cURL
+	"""
+	## Copy data. GET copying is for debug mode.
 	try:
 		if get:
 			data = request.GET.copy()
@@ -42,7 +41,8 @@ def ipn(request, get=False):
 			logger.debug('Verification Failed')
 			verification = False
 			if not settings.CLICKBANK_KEEP_INVALID:
-				raise NotificationFailedValidation('Verification Failed and CLICKBANK_KEEP_INVALID is False')
+				raise NotificationFailedValidation(
+					'Verification Failed and CLICKBANK_KEEP_INVALID is False')
 		else:
 			verification = True
 			logger.debug('Verification Passed')
@@ -51,26 +51,34 @@ def ipn(request, get=False):
 		mapped_data = remap_post(data)
 
 		# Clickbank sends times as epoch times which aren't very usefull to us, so lets fix them.
+		for field in Notification.TIME_FIELDS:
+			if field in mapped_data:
+				if mapped_data[field]:
+					mapped_data[field] = epoch_to_datetime(mapped_data[field])
+
 		for field in Notification.DATE_FIELDS:
 			if field in mapped_data:
-				mapped_data[field] = epoch_to_datetime(mapped_data[field])
+				if mapped_data[field]:
+					mapped_data[field] = date_to_datetime(mapped_data[field])
 
+		# Some Clickbank Fields are stored in
 		# Lets store those cent amount as decimal number to make it easier to work with.
 		for field in Notification.AMOUNT_FIELDS:
 			if field in mapped_data:
-				mapped_data[field] = cents_to_decimal(mapped_data[field])
-
+				if mapped_data[field]:
+					mapped_data[field] = cents_to_decimal(mapped_data[field])
 
 		# New form instanced with newly mapped data
 		form = NotificationForm(mapped_data)
 		if form.is_valid():
 			try:
-				# Create a new notification instance, but don't save it. We want to be able to do more with it
-				# before the post_create and post_save signals are called.
-				notification = form.save(commit = False)
+				# Create a new notification instance, but don't save it.
+				# We want to be able to do more with it before the post_create and post_save signals
+				# are called.
+				notification = form.save(commit=False)
 			except Exception, e:
 				raise NotificationFailedValidation(e)
-		else: 
+		else:
 			raise NotificationFailedValidation('{0}\n{1}\n{2}'.format(form.errors, mapped_data, data))
 
 		notification.initialize(request)
@@ -79,8 +87,9 @@ def ipn(request, get=False):
 
 		logger.info('Notification Processed Succesfully:')
 		logger.info('Source: {0} Receipt: {1} Type: {2} Vendor: {3} Affiliate: {4} Product: {5}'.format(
-			notification.sender_ip, notification.receipt, notification.transaction_type,notification.transaction_vendor,
-			notification.transaction_affiliate, '{0}:{1}'.format(notification.product_id, notification.product_title)))
+			notification.sender_ip, notification.receipt, notification.transaction_type,
+			notification.transaction_vendor, notification.transaction_affiliate,
+			'{0}:{1}'.format(notification.product_id, notification.product_title)))
 
 		return HttpResponse(notification.id)
 	except:

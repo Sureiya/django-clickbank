@@ -6,17 +6,13 @@ import random
 import string
 
 from django.conf import settings
-from django_clickbank.util.exceptions import NotificationFailedValidation
 from django_clickbank.models import Notification
-
-from django.conf import settings
 
 logger = logging.getLogger('django_clickbank.notifications')
 
-def verify_secret(post, secret_key = None):
+
+def verify_secret(post, secret_key=settings.CLICKBANK_SECRET_KEY):
 	""" Checks the secret key and makes sure the post hash matches """
-	if secret_key is None:
-		secret_key = settings.CLICKBANK_SECRET_KEY
 	post = post.copy()
 	try:
 		post_hash = post.pop('cverify')
@@ -26,7 +22,7 @@ def verify_secret(post, secret_key = None):
 		for key in post.keys():
 			ipn_fields.append(key)
 		ipn_fields.sort()
-		
+
 		data = []
 		for field in ipn_fields:
 			data.append(post[field])
@@ -40,18 +36,17 @@ def verify_secret(post, secret_key = None):
 		logger.debug('Verification: SECRET_KEY = {0}'.format(secret_key))
 		logger.debug('Verification: Hashed String = {0}'.format(hash_string))
 		logger.debug('Verification: {0}'.format(verification))
-		
+
 		return verification
 	except Exception, e:
 		raise
 		logger.debug('Notification Verification Failed {0}'.format(e))
 		return False
 
-def make_secret(post, secret_key = None):
+
+def make_secret(post, secret_key=settings.CLICKBANK_SECRET_KEY):
 	""" Makes a new cverify from post parameters. Only usefull for creating test POSTs """
 
-	if secret_key is None:
-		secret_key = settings.CLICKBANK_SECRET_KEY
 	post = post.copy()
 	if 'cverify' in post:
 		post_hash = post.pop('cverify')
@@ -59,7 +54,7 @@ def make_secret(post, secret_key = None):
 	for key in post.keys():
 		ipn_fields.append(key)
 	ipn_fields.sort()
-	
+
 	data = []
 	for field in ipn_fields:
 		if isinstance(post[field], list):
@@ -72,10 +67,11 @@ def make_secret(post, secret_key = None):
 
 
 class conditional_decorator(object):
-	""" 
+	"""
 	Used to apply a decorator based on a condition
 	Condition can be either a function or Logic (IE. bool == False)
-	Based on http://stackoverflow.com/questions/10724854/how-to-do-a-conditional-decorator-in-python-2-6
+	Based on:
+	http://stackoverflow.com/questions/10724854/how-to-do-a-conditional-decorator-in-python-2-6
 	"""
 	def __init__(self, decorator, condition):
 		self.decorator = decorator
@@ -89,7 +85,7 @@ class conditional_decorator(object):
 
 
 def remap_post(data):
-	""" 
+	"""
 	Remaps a dictionary to use new keys as defined below.
 	Used to get around the fact that clickbank uses post_data with names
 	that don't fit well with python/django naming conventions.
@@ -108,7 +104,7 @@ def remap_post(data):
 		u'ctid': u'tracking_id',
 		u'corderlanguage': u'order_language',
 		u'ccustcounty': u'country',
-		u'ccustcc': u'country_code', 
+		u'ccustcc': u'country_code',
 		u'ccuststate': u'province',
 		u'cfuturepayments': u'future_payments',
 		u'crebillamnt': u'rebill_amount',
@@ -149,36 +145,52 @@ def remap_post(data):
 
 def epoch_to_datetime(epochtime):
 	""" Converts a unix epoch time to python datetime """
-	if epochtime:
-		return datetime.datetime.utcfromtimestamp(int(epochtime))
+	return datetime.datetime.utcfromtimestamp(int(epochtime))
+
+
+def date_to_datetime(date):
+	""" Convert Clickbank date data (YEAR-MONTH-DAY) to datetime """
+	return datetime.strptime(date, '%Y-%m-%d').date()
+
 
 def cents_to_decimal(cents):
 	""" Used to turns clickbank amounts (in cents) to decimal number """
 	if cents:
 		return float(cents) / 100
 
+
 def amount_generator(min=200, max=999999):
 	""" Used to generate a random amount in cents """
 	return str(random.randrange(min, max))
+
 
 def receipt_generator():
 	""" Used to generate a random receipt for testing """
 	return ''.join(random.choice(string.ascii_uppercase + string.digits) for x in range(13))
 
+
 def zip_generator():
+	""" Generate a string similar to that of a U.S. Zip code """
 	return str(random.randrange(00000, 99999))
 
+
 def string_generator(length=5, chars=string.ascii_uppercase + string.digits):
+	""" Generate a string. Defaults to uppercase ASCII and numbers """
 	return ''.join(random.choice(chars) for x in range(length))
 
+
 def language_generator():
+	""" Grab a random language from django languages dict """
 	from django.conf.global_settings import LANGUAGES
 	return random.choice(LANGUAGES)[0].upper()
 
+
 def future_date_generator(min_days=2, max_days=30):
+	""" Get a random future datetime. Default 2-30 days in the future """
 	now = datetime.datetime.now()
 	timedelta = datetime.timedelta(days=random.randrange(min_days, max_days))
 	return str(int(time.mktime((now + timedelta).timetuple())))
+
 
 def generate_post(secret_key=settings.CLICKBANK_SECRET_KEY, data=None):
 	""" Generate a post with a given secret key for use with testing """
@@ -233,5 +245,3 @@ def generate_post(secret_key=settings.CLICKBANK_SECRET_KEY, data=None):
 	}
 	post_data[u'cverify'] = make_secret(post_data)
 	return post_data
-
-
