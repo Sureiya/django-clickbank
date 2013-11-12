@@ -20,7 +20,7 @@ class HelperTest(TestCase):
 		import copy
 		test_posts = copy.deepcopy(TEST_POSTS)
 
-		for i in range(0, 100):
+		for i in range(0, 10):
 			test_posts.append(generate_post(SECRET_KEY))
 
 		for post in TEST_POSTS:
