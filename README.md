@@ -39,10 +39,10 @@ Setup
 ```python
 # settings.py
 INSTALLED_APPS = (
-    ...
-    'south',
-    'django_clickbank',
-    ...
+      ...
+      'south',
+      'django_clickbank',
+      ...
 )
 ```
 
@@ -56,7 +56,7 @@ INSTALLED_APPS = (
 ```python
 urlpatterns = patterns('',
     ...
-    url(r'^', include('django_clickbank.urls')),
+      url(r'^', include('django_clickbank.urls')),
     ...
 )
 ```
@@ -84,8 +84,8 @@ CLICKBANK_SECRET_KEY = <key generated in step 6>
 ```python
 # settings.py
 LOGGING['loggers']['django_clickbank.notications' = {
-  'handlers': ['console'], # Change handlers if you want. Logging levels are DEBUG and INFO
-  'propogate': True,
+    'handlers': ['console'], # Change handlers if you want. Logging levels are DEBUG and INFO
+    'propogate': True,
 }
 ```
 9. Test it out.
