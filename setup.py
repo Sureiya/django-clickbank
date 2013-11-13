@@ -22,9 +22,9 @@ setup(
 		"Topic :: Software Development"
 	],
 	long_description= """
-	============
+	==============
 	django-paypal
-	============
+	==============
 	django-paypal is a pluggable application for recieving ClickBank's Instant Payment
 	Notifications. For more info please visit the github page at 
 	https://github.com/sureiya/django-clickbank
