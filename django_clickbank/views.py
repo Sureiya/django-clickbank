@@ -83,6 +83,7 @@ def ipn(request, get=False):
 			if 'receipt' in form.errors:
 				if form.errors['receipt'][0] == u'Notification with this Receipt already exists.':
 					notification = Notification.objects.get(receipt=form.data['receipt'])
+					logger.info('Notification recognized as duplicate. Returning OK.')
 					return HttpResponse(notification.id)
 			raise NotificationFailedValidation('{0}\n{1}\n{2}'.format(form.errors, mapped_data, data))
 
