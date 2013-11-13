@@ -80,7 +80,15 @@ python manage.py migrate django_clickbank
 CLICKBANK_SECRET_KEY = <key generated in step 6>
 ```
 
-8. Test it out.
+8. Setup Logging **(Optional)**
+```python
+# settings.py
+LOGGING['loggers']['django_clickbank.notications' = {
+  'handlers': ['console'], # Change handlers if you want. Logging levels are DEBUG and INFO
+  'propogate': True,
+}
+```
+9. Test it out.
 
 Usage
 ------
