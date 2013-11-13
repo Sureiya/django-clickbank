@@ -1,6 +1,6 @@
 django-clickbank
 =========
-[![Build Status](https://travis-ci.org/Sureiya/django-clickbank.png?branch=master)](https://travis-ci.org/Sureiya/django-clickbank)
+[![Build Status](https://travis-ci.org/Sureiya/django-clickbank.png?branch=master)](https://travis-ci.org/Sureiya/django-clickbank) [![Coverage Status](https://coveralls.io/repos/Sureiya/django-clickbank/badge.png?branch=master)](https://coveralls.io/r/Sureiya/django-clickbank?branch=master)
 
 django-clickbank is a pluggable django application for recieving ClickBank [Instant Payment Notifications] [1]
 
