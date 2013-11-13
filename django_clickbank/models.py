@@ -89,7 +89,7 @@ class Notification(models.Model):
 	)
 
 	# Notification Fields
-	receipt = models.CharField(max_length=13, unique=True)
+	receipt = models.CharField(max_length=13, unique=True, db_index=True)
 	role = models.CharField(max_length=9, choices=ROLE_CHOICES)
 	transaction_type = models.CharField(max_length=15, choices=TRANSACTION_TYPE_CHOICES)
 	transaction_vendor = models.CharField(max_length=10, blank=True)
