@@ -1,5 +1,12 @@
 # [Changelog](/releases)
 
+## [0.1.3](/compare/0.1.2...0.1.3)
+
+* [eba882e](/commit/eba882e) Added duplicate test_post to test duplicate_receipt logic
+* [6404f84](/commit/6404f84) Added exclusion to form validation so that ipn returns status 200 on duplicate receipt
+* [0b78732](/commit/0b78732) Added index to receipt for faster lookups
+* [161324f](/commit/161324f) Updated long_description for packaging
+
 ## [0.1.2](/compare/0.1.1...0.1.2)
 
 * [e671358](/commit/e671358) Added new test_post for testing rebill notification
