@@ -8,6 +8,6 @@ install:
 # command to run tests
 script:
   - "pip install -r test-requirements.txt"
-  - "coverage run --source=django_clickbank runtests.py"
+  - "coverage run --source=django_clickbank --omit=*admin*,*migrations/* runtests.py"
 after_success:
   coveralls
