@@ -3,8 +3,11 @@ python:
   - "2.7"
 # command to install dependencies
 install:
-  - "pip install -r test-requirements.txt"
+  - "pip install -r test-requirements.txt --use-mirrors"
+  - "pip install coveralls --use-mirrors"
 # command to run tests
 script:
   - "pip install -r test-requirements.txt"
-  - "python runtests.py"
+  - "coverage run --source=django_clickbank runtests.py"
+after_success:
+  coveralls
