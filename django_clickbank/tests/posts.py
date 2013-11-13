@@ -140,4 +140,48 @@ TEST_POST_3 = {
 	"ccustshippingstate": "MO"
 }
 
-TEST_POSTS = [TEST_POST, TEST_POST_2, TEST_POST_3]
+TEST_POST_4 = {
+	'caccountamount': ['873'],
+	'cbf': ['ZBN24EFBTG'],
+	'cbfid': ['12425'],
+	'cbfpath': ['aa'],
+	'ccurrency': ['USD'],
+	'ccustcc': ['US'],
+	'ccustcounty': ['KING'],
+	'ccustemail': ['jkdfjuklsd@comcast.net'],
+	'ccustfirstname': ['Sylvia'],
+	'ccustfullname': ['Sylvia Jones'],
+	'ccustlastname': ['Jones'],
+	'ccustshippingcountry': ['US'],
+	'ccustshippingstate': ['WA'],
+	'ccustshippingzip': ['98118'],
+	'ccuststate': ['WA'],
+	'ccustzip': ['98118'],
+	'cfuturepayments': ['998'],
+	'cnextpaymentdate': ['2013-12-12'],
+	'cnoticeversion': ['4.0'],
+	'corderamount': ['1995'],
+	'corderlanguage': ['EN'],
+	'cprocessedpayments': ['1'],
+	'cproditem': ['2019'],
+	'cprodtitle': ['United Survivalists Association'],
+	'cprodtype': ['RECURRING'],
+	'crebillamnt': ['1995'],
+	'crebillfrequency': ['MONTHLY'],
+	'crebillstatus': ['ACTIVE'],
+	'cshippingamount': ['0'],
+	'ctaxamount': ['0'],
+	'ctransaction': ['SALE'],
+	'ctransaffiliate': ['firbles'],
+	'ctranspaymentmethod': ['AMEX'],
+	'ctransreceipt': ['V73D6CED'],
+	'ctransrole': ['VENDOR'],
+	'ctranstime': ['1384273975'],
+	'ctransvendor': ['csmsurvive'],
+	'cupsellreceipt': ['DFZREKMH'],
+	'cvendthru': ['cupsellreceipt=DFZREKMH&cbf=ZBN24EFBTG&cbrblaccpt=true&y=52&customer_id=1118&x=196&cbur=a&'],
+	'cverify': ['C41E25C1']
+}
+
+
+TEST_POSTS = [TEST_POST, TEST_POST_2, TEST_POST_3, TEST_POST_4]
