@@ -1,5 +1,12 @@
 # [Changelog](/releases)
 
+## [0.1.2](/compare/0.1.1...0.1.2)
+
+* [e671358](/commit/e671358) Added new test_post for testing rebill notification
+* [52852eb](/commit/52852eb) Updated the future_date_generator and added date_to_datetime to support future_payments format
+* [3010f69](/commit/3010f69) Added sublime project files to .gitignore
+* [755f9a3](/commit/755f9a3) Added build directory to makefile clean
+
 ## [0.1.1](/compare/0.1.1...0.1.1)
 
 * [482c02d](/commit/482c02d) Updated README with links
