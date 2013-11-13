@@ -25,7 +25,10 @@ def verify_secret(post, secret_key=settings.CLICKBANK_SECRET_KEY):
 
 		data = []
 		for field in ipn_fields:
-			data.append(post[field])
+			if isinstance(post[field], list):
+				data.append(post[field][0])
+			else:
+				data.append(post[field])
 		data.append(secret_key)
 		hash_string = '|'.join(data)
 		hex_digest = unicode(hashlib.sha1(hash_string).hexdigest()[:8].upper(), encoding='ascii')
@@ -150,7 +153,7 @@ def epoch_to_datetime(epochtime):
 
 def date_to_datetime(date):
 	""" Convert Clickbank date data (YEAR-MONTH-DAY) to datetime """
-	return datetime.strptime(date, '%Y-%m-%d').date()
+	return datetime.datetime.strptime(date, '%Y-%m-%d').date()
 
 
 def cents_to_decimal(cents):
@@ -185,11 +188,18 @@ def language_generator():
 	return random.choice(LANGUAGES)[0].upper()
 
 
-def future_date_generator(min_days=2, max_days=30):
-	""" Get a random future datetime. Default 2-30 days in the future """
+def future_epock_generator(min_days=2, max_days=30):
+	""" Get a random future epoch datetime. Default 2-30 days in the future """
 	now = datetime.datetime.now()
 	timedelta = datetime.timedelta(days=random.randrange(min_days, max_days))
 	return str(int(time.mktime((now + timedelta).timetuple())))
+
+
+def future_date_generator(min_days=2, max_days=30):
+	""" Get a random future date string. Default 2-30 days in the future """
+	now = datetime.datetime.now()
+	timedelta = datetime.timedelta(days=random.randrange(min_days, max_days))
+	return (now + timedelta).strftime('%Y-%m-%d')
 
 
 def generate_post(secret_key=settings.CLICKBANK_SECRET_KEY, data=None):

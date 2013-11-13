@@ -27,11 +27,10 @@ class Notification(models.Model):
 	# List of fields that need to be converted from unix epoch time to python DateTime instance.
 	TIME_FIELDS = (
 		'transaction_date',
-		'next_payment_date',
 	)
 
 	DATE_FIELDS = (
-		'',
+		'next_payment_date',
 	)
 
 	# List of fields that are processed by cents_to_decimal helper function
