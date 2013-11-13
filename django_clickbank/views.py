@@ -79,6 +79,11 @@ def ipn(request, get=False):
 			except Exception, e:
 				raise NotificationFailedValidation(e)
 		else:
+			# If the form invalidates due to duplicate receipt, we go ahead and return 200 anyway.
+			if 'receipt' in form.errors:
+				if form.errors['receipt'][0] == u'Notification with this Receipt already exists.':
+					notification = Notification.objects.get(receipt=form.data['receipt'])
+					return HttpResponse(notification.id)
 			raise NotificationFailedValidation('{0}\n{1}\n{2}'.format(form.errors, mapped_data, data))
 
 		notification.initialize(request)
