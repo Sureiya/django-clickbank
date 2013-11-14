@@ -11,7 +11,7 @@ setup(
 	description = "A pluggable application for receiving data from ClickBank's Instant Payment Notifications",
 	license = "MIT",
 	keywords = "django clickbank ipn",
-	url = "https://github.com/sureiya/django_clickbank/",
+	url = "https://github.com/sureiya/django-clickbank/",
 	include_package_data=True,
 
 	classifiers=[
