@@ -161,6 +161,15 @@ class Notification(ClickBankModel):
 		except:
 			return None
 
+	def refund_parent(self):
+		"""
+		Gets parent notification for a refund or chargeback
+		"""
+		try:
+			return Notification.objects.get(receipt=self.receipt, transaction_type='SALE')
+		except:
+			return None
+
 	def rebill_parent(self):
 		"""
 		Gets parent notification of a rebill
