@@ -1,5 +1,21 @@
 # [Changelog](/releases)
 
+## [0.1.4](/compare/0.1.3...0.1.4)
+
+* [484df5d](/commit/484df5d) Fixed spelling on insufficient_funds signal
+* [adc29c9](/commit/adc29c9) Upped number of test posts generated
+* [879dd7c](/commit/879dd7c) Added resending signals when CLICKBANK_DEBUG is on, also adding logging
+* [bfe0851](/commit/bfe0851) Fixed url in setup.py
+* [8f7d34b](/commit/8f7d34b) Fixed indentation on README.md
+* [658f2d1](/commit/658f2d1) Updated README.md with logging setup
+* [9f04273](/commit/9f04273) Added migrations and admin.py to coverage exclusion
+* [810066f](/commit/810066f) Added coveralls button
+* [ad32a9d](/commit/ad32a9d) Added travis button to README.md
+* [d551915](/commit/d551915) Added coveralls to travis config
+* [5ae5524](/commit/5ae5524) Updated travis config
+* [1a9efea](/commit/1a9efea) Added travis config file
+* [42d3019](/commit/42d3019) Added logging for duplicate receipt
+
 ## [0.1.3](/compare/0.1.2...0.1.3)
 
 * [eba882e](/commit/eba882e) Added duplicate test_post to test duplicate_receipt logic
