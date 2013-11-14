@@ -2,8 +2,12 @@ from django.db import models
 from django.conf import settings
 from django_clickbank.signals import *
 
+class ClickBankModel(models.model):
+	class Meta:
+		app_label = 'Clickbank Notifications'
+		abstract = True
 
-class Post(models.Model):
+class Post(ClickBankModel):
 	"""
 	Debug model used to log raw POST dictionaries of
 	clickbank data in order to create test posts
@@ -21,7 +25,7 @@ class Post(models.Model):
 		return u'{0}'.format(self.id)
 
 
-class Notification(models.Model):
+class Notification(ClickBankModel):
 	""" Model to hold all of the information recieved in a ClickBank Notification """
 
 	# List of fields that need to be converted from unix epoch time to python DateTime instance.
