@@ -141,3 +141,6 @@ MIT
 [2]: https://docs.djangoproject.com/en/dev/topics/signals/
 [3]: https://github.com/Sureiya/django-clickbank/blob/master/django_clickbank/signals.py
 [4]: https://github.com/Sureiya/django-clickbank/blob/master/django_clickbank/models.py
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Sureiya/django-clickbank/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
