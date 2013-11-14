@@ -9,7 +9,7 @@ refund = Signal()
 
 chargeback = Signal()
 
-insuffient_funds = Signal()
+insufficient_funds = Signal()
 
 cancel = Signal()
 
