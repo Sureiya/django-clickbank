@@ -84,13 +84,16 @@ def ipn(request, get=False):
 				if form.errors['receipt'][0] == u'Notification with this Receipt already exists.':
 					notification = Notification.objects.get(receipt=form.data['receipt'])
 					logger.info('Notification recognized as duplicate. Returning OK.')
+					if settings.CLICKBANK_DEBUG:
+						logger.debug('Resending Signals')
+						notification.send_signals()
 					return HttpResponse(notification.id)
 			raise NotificationFailedValidation('{0}\n{1}\n{2}'.format(form.errors, mapped_data, data))
 
 		notification.initialize(request)
 		notification.verification_passed = verification
 		notification.save()
-
+		notification.send_signals()
 		logger.info('Notification Processed Succesfully:')
 		logger.info('Source: {0} Receipt: {1} Type: {2} Vendor: {3} Affiliate: {4} Product: {5}'.format(
 			notification.sender_ip, notification.receipt, notification.transaction_type,
