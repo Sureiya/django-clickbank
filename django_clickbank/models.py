@@ -93,7 +93,7 @@ class Notification(ClickBankModel):
 	)
 
 	# Notification Fields
-	receipt = models.CharField(max_length=13, unique=True, db_index=True)
+	receipt = models.CharField(max_length=13, db_index=True)
 	role = models.CharField(max_length=9, choices=ROLE_CHOICES)
 	transaction_type = models.CharField(max_length=15, choices=TRANSACTION_TYPE_CHOICES)
 	transaction_vendor = models.CharField(max_length=10, blank=True)
@@ -154,6 +154,9 @@ class Notification(ClickBankModel):
 	class Meta:
 		verbose_name = u'notification'
 		verbose_name_plural = u'notifications'
+
+		# Receipts are the same for chargebacks and refunds
+		unique_together = ('receipt', 'transaction_type')
 
 	def initialize(self, request):
 		""" If notification is being added from an actual Post this will set sender IP and store query if neccesary """
