@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 from django_clickbank.signals import *
 
-class ClickBankModel(models.model):
+class ClickBankModel(models.Model):
 	class Meta:
 		app_label = 'Clickbank Notifications'
 		abstract = True
@@ -117,11 +117,12 @@ class Notification(ClickBankModel):
 	verification_passed = models.BooleanField(default=True)
 
 	# Upsell
-	parent_receipt = models.CharField(max_length=13, blank=True, null=True)
+	parent_receipt = models.CharField(max_length=13, db_index=True, blank=True, null=True)
 	upsell_flow = models.CharField(max_length=20, blank=True, null=True)
 
 	# Recurring
 	rebill_amount = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
+	rebill_parent_receipt = models.CharField(max_length=13, db_index=True, blank=True, null=True)
 	processed_payments = models.IntegerField(blank=True, null=True)
 	future_payments = models.IntegerField(blank=True, null=True)
 	next_payment_date = models.DateField(blank=True, null=True)
@@ -151,12 +152,37 @@ class Notification(ClickBankModel):
 	shipping_country = models.CharField(max_length=255, blank=True, null=True)
 	shipping_amount = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True)
 
+	def parent(self):
+		"""
+		Gets parent notification for an upsell
+		"""
+		try:
+			return Notification.objects.get(receipt=self.parent_receipt, transaction_type='SALE')
+		except:
+			return None
+
+	def rebill_parent(self):
+		"""
+		Gets parent notification of a rebill
+		"""
+		try:
+			return Notification.objects.get(receipt=self.parent_receipt, transaction_type='SALE',
+				product_type='RECURRING')
+		except:
+			return None
+
 	class Meta:
 		verbose_name = u'notification'
 		verbose_name_plural = u'notifications'
 
 		# Receipts are the same for chargebacks and refunds
 		unique_together = ('receipt', 'transaction_type')
+
+	def save(self, *args, **kwargs):
+		# If transaction is rebill, lets get the rebill_parent receipt for easier lookups.
+		if self.transaction_type == 'BILL' and not self.rebill_parent_receipt:
+			self.rebill_parent_receipt = self.receipt.split('-')[0]
+		super(Notification, self).save(*args, **kwargs)
 
 	def initialize(self, request):
 		""" If notification is being added from an actual Post this will set sender IP and store query if neccesary """
