@@ -1,5 +1,16 @@
 # [Changelog](/releases)
 
+## [0.2.0](/compare/0.1.4...0.2.0)
+
+* [7239324](/commit/7239324) Add tox to normal requirements to appease changes
+* [9900b22](/commit/9900b22) Added admin action "resend_signals"
+* [e25b2f9](/commit/e25b2f9) Re-added notification duplication detection
+* [6d0867f](/commit/6d0867f) Added refund_parent method to get a refunds parent notification
+* [4fc2024](/commit/4fc2024) Added new rebill_parent_receipt field and methods to retrieve parent notifications
+* [ba3982a](/commit/ba3982a) Removed uniqueness from receipt, added unique_together
+* [5fdc954](/commit/5fdc954) Cleaned up admin interface
+* [a4a7077](/commit/a4a7077) Add a Bitdeli badge to README
+
 ## [0.1.4](/compare/0.1.3...0.1.4)
 
 * [484df5d](/commit/484df5d) Fixed spelling on insufficient_funds signal
