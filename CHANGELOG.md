@@ -1,5 +1,12 @@
 # [Changelog](/releases)
 
+## [0.2.2](/compare/0.2.0...0.2.2)
+
+* [08fa085](/commit/08fa085) Fixed keyerror on form error handling
+* [60ed80a](/commit/60ed80a) Changed CANCELLED -> CANCELED. Thanks America.
+* [3a23c08](/commit/3a23c08) Version bump
+* [1aa055c](/commit/1aa055c) Updated CHANGELOG.md
+
 ## [0.2.0](/compare/0.1.4...0.2.0)
 
 * [7239324](/commit/7239324) Add tox to normal requirements to appease changes
