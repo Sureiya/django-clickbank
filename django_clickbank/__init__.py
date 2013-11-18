@@ -1,2 +1,2 @@
 __version__ = '0.2.2'
-__url__ = ''
+__url__ = 'https://github.com/sureiya/django-clickbank'
