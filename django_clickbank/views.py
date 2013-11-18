@@ -81,7 +81,7 @@ def ipn(request, get=False):
 		else:
 			if '__all__' in form.errors:
 				if form.errors['__all__'][0] == u'Notification with this Receipt and Transaction type already exists.':
-					notification = Notification.objects.get(receipt=form.data['receipt'])
+					notification = Notification.objects.get(receipt=form.data['receipt'], transaction_type=form.data['transaction_type'])
 					logger.info('Notification recognized as duplicate. Returning OK.')
 					return HttpResponse(notification.id)
 
