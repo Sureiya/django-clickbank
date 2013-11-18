@@ -79,10 +79,11 @@ def ipn(request, get=False):
 			except Exception, e:
 				raise NotificationFailedValidation(e)
 		else:
-			if form.errors['__all__'][0] == u'Notification with this Receipt and Transaction type already exists.':
-				notification = Notification.objects.get(receipt=form.data['receipt'])
-				logger.info('Notification recognized as duplicate. Returning OK.')
-				return HttpResponse(notification.id)
+			if '__all__' in form.errors:
+				if form.errors['__all__'][0] == u'Notification with this Receipt and Transaction type already exists.':
+					notification = Notification.objects.get(receipt=form.data['receipt'])
+					logger.info('Notification recognized as duplicate. Returning OK.')
+					return HttpResponse(notification.id)
 
 			raise NotificationFailedValidation('{0}\n{1}\n{2}'.format(form.errors, mapped_data, data))
 
