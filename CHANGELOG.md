@@ -1,5 +1,9 @@
 # [Changelog](https://github.com/sureiya/django-clickbank/releases)
 
+## [0.2.4](https://github.com/sureiya/django-clickbank/compare/0.2.3...0.2.4)
+
+* [afb1fb3](https://github.com/sureiya/django-clickbank/commit/afb1fb3) Fixed MultipleReturns on duplicate notification
+
 ## [0.2.3](https://github.com/sureiya/django-clickbank/compare/0.2.2...0.2.3)
 
 * [539af5d](https://github.com/sureiya/django-clickbank/commit/539af5d) Added search fields to notification admin
