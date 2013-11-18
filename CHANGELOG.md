@@ -1,4 +1,10 @@
-# [Changelog](/releases)
+# [Changelog](https://github.com/sureiya/django-clickbank/releases)
+
+## [0.2.3](https://github.com/sureiya/django-clickbank/compare/0.2.2...0.2.3)
+
+* [539af5d](https://github.com/sureiya/django-clickbank/commit/539af5d) Added search fields to notification admin
+* [191be6a](https://github.com/sureiya/django-clickbank/commit/191be6a) Fixed links on changelog
+* [635fa48](https://github.com/sureiya/django-clickbank/commit/635fa48) Added __url__
 
 ## [0.2.2](https://github.com/sureiya/django-clickbank/compare/0.2.0...0.2.2)
 
