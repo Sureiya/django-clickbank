@@ -3,6 +3,7 @@ from django_clickbank.models import Notification, Post
 from django_clickbank.forms import PostAdminForm
 from django.conf import settings
 
+
 class NotificationAdmin(admin.ModelAdmin):
 
 	model = Notification
@@ -11,6 +12,7 @@ class NotificationAdmin(admin.ModelAdmin):
 	'product_type', 'order_amount', 'recieved_amount', 'transaction_affiliate', 'transaction_date']
 	list_filter = ['transaction_type', 'transaction_date', 'verification_passed']
 	readonly_fields = ['post_data']
+	search_fields = ['receipt', 'parent_receipt', 'email', 'full_name', 'transaction_affiliate']
 
 	def resend_signals(self, request, queryset):
 		"""
@@ -25,13 +27,14 @@ class NotificationAdmin(admin.ModelAdmin):
 	if settings.CLICKBANK_DEBUG:
 		actions = [resend_signals]
 
+
 class PostAdmin(admin.ModelAdmin):
 
 	model = Post
 	form = PostAdminForm
 	list_display = ['id', 'time', ]
 	list_display_links = list_display
-	list_filter = ['failed']
+	list_filter = ['failed',]
 
 
 admin.site.register(Notification, NotificationAdmin)
