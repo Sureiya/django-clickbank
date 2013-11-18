@@ -66,7 +66,7 @@ class Notification(ClickBankModel):
 	REBILL_STATUS_CHOICES = (
 		('ACTIVE', 'Active'),
 		('COMPLETED', 'Completed'),
-		('CANCELLED', 'Cancelled')
+		('CANCELED', 'Cancelled')
 	)
 
 	PRODUCT_TYPE_CHOICES = (
