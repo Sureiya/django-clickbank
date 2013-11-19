@@ -1,5 +1,9 @@
 # [Changelog](https://github.com/sureiya/django-clickbank/releases)
 
+## [0.2.5](https://github.com/sureiya/django-clickbank/compare/0.2.4...0.2.5)
+
+* [47d454d](https://github.com/sureiya/django-clickbank/commit/47d454d) Added configuration setting for admin signal resend action
+
 ## [0.2.4](https://github.com/sureiya/django-clickbank/compare/0.2.3...0.2.4)
 
 * [afb1fb3](https://github.com/sureiya/django-clickbank/commit/afb1fb3) Fixed MultipleReturns on duplicate notification
