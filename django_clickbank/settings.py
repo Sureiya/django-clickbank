@@ -12,3 +12,6 @@ CLICKBANK_SIGNAL_INVALID = False
 
 ## Send 200 status when a transaction is received that already exists. Mostly for debugging
 CLICKBANK_IGNORE_DUPLICATES = False
+
+## Allow resending signals in admin
+CLICKBANK_RESEND_SIGNALS = False

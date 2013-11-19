@@ -24,7 +24,7 @@ class NotificationAdmin(admin.ModelAdmin):
 
 	resend_signals.short_description = 'Resend django signals for selected notifications'
 
-	if settings.CLICKBANK_DEBUG:
+	if settings.CLICKBANK_RESEND_SIGNALS:
 		actions = [resend_signals]
 
 
