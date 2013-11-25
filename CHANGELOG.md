@@ -1,5 +1,9 @@
 # [Changelog](https://github.com/sureiya/django-clickbank/releases)
 
+## [0.2.7](https://github.com/sureiya/django-clickbank/compare/0.2.6...0.2.7)
+
+* [f002636](https://github.com/sureiya/django-clickbank/commit/f002636) Added TEST_REBILL to available transaction types
+
 ## [0.2.6](https://github.com/sureiya/django-clickbank/compare/0.2.5...0.2.6)
 
 * [2a9a521](https://github.com/sureiya/django-clickbank/commit/2a9a521) Fixed: Province field can have more than 2 characters
