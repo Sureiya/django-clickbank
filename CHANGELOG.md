@@ -1,5 +1,9 @@
 # [Changelog](https://github.com/sureiya/django-clickbank/releases)
 
+## [0.2.6](https://github.com/sureiya/django-clickbank/compare/0.2.5...0.2.6)
+
+* [2a9a521](https://github.com/sureiya/django-clickbank/commit/2a9a521) Fixed: Province field can have more than 2 characters
+
 ## [0.2.5](https://github.com/sureiya/django-clickbank/compare/0.2.4...0.2.5)
 
 * [47d454d](https://github.com/sureiya/django-clickbank/commit/47d454d) Added configuration setting for admin signal resend action
