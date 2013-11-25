@@ -1,6 +1,9 @@
 from django.db import models
 from django.conf import settings
 from django_clickbank.signals import *
+import logging
+
+logger = logging.getLogger('django_clickbank.notifications')
 
 class ClickBankModel(models.Model):
 	class Meta:
@@ -133,7 +136,7 @@ class Notification(ClickBankModel):
 	full_name = models.CharField(max_length=510)
 	first_name = models.CharField(max_length=255, blank=True, null=True)
 	last_name = models.CharField(max_length=255, blank=True, null=True)
-	province = models.CharField(max_length=2, blank=True, null=True)
+	province = models.CharField(max_length=255, blank=True, null=True)
 	postal_code = models.CharField(max_length=16, blank=True, null=True)
 	city = models.CharField(max_length=255, blank=True, null=True)
 	country = models.CharField(max_length=255, blank=True, null=True)
@@ -205,6 +208,7 @@ class Notification(ClickBankModel):
 		""" Send out neccesary signals on post_save or update """
 
 		if self.transaction_type in ('SALE', 'TEST_SALE'):
+			logging.debug('Sending Notification: {0}'.format(sale))
 			sale.send(sender=self)
 
 		elif self.transaction_type == 'BILL':
