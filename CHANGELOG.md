@@ -1,5 +1,9 @@
 # [Changelog](https://github.com/sureiya/django-clickbank/releases)
 
+## [0.2.8](https://github.com/sureiya/django-clickbank/compare/0.2.7...0.2.8)
+
+* [04727dc](https://github.com/sureiya/django-clickbank/commit/04727dc) Added more test transaction types to validation
+
 ## [0.2.7](https://github.com/sureiya/django-clickbank/compare/0.2.6...0.2.7)
 
 * [f002636](https://github.com/sureiya/django-clickbank/commit/f002636) Added TEST_REBILL to available transaction types
