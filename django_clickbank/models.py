@@ -59,7 +59,9 @@ class Notification(ClickBankModel):
 		('UNCANCEL-REBILL', 'Resume Rebill'),
 		('TEST', 'IPN Test'),
 		('TEST_SALE', 'Test Sale'),
-		('TEST_BILL', 'Test Rebill')
+		('TEST_BILL', 'Test Rebill'),
+		('TEST_RFND', 'Test Refund'),
+		('TEST_CHGBK', 'Test Chargeback'),
 	)
 
 	ROLE_CHOICES = (
