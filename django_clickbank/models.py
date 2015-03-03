@@ -181,7 +181,7 @@ class Notification(ClickBankModel):
 		Gets parent notification of a rebill
 		"""
 		try:
-			return Notification.objects.get(receipt=self.parent_receipt, transaction_type='SALE',
+			return Notification.objects.get(receipt=self.receipt, transaction_type='SALE',
 				product_type='RECURRING')
 		except:
 			return None
